@@ -600,8 +600,11 @@ class Resource(six.with_metaclass(DeclarativeMetaclass)):
         request_method = request.method.lower()
         self._meta.throttle.accessed(self._meta.authentication.get_identifier(request), url=request.get_full_path(), request_method=request_method)
 
-    def unauthorized_result(self, exception):
-        raise ImmediateHttpResponse(response=http.HttpUnauthorized())
+    def unauthorized_result(self, exception=None, is_authenticated=False):
+        if is_authenticated:
+            raise ImmediateHttpResponse(response=http.HttpForbidden())
+        else:
+            raise ImmediateHttpResponse(response=http.HttpUnauthorized())
 
     def authorized_read_list(self, object_list, bundle):
         """
@@ -611,7 +614,7 @@ class Resource(six.with_metaclass(DeclarativeMetaclass)):
         try:
             auth_result = self._meta.authorization.read_list(object_list, bundle)
         except Unauthorized as e:
-            self.unauthorized_result(e)
+            self.unauthorized_result(e, is_authenticated=bundle.request.user.is_authenticated)
 
         return auth_result
 
@@ -623,9 +626,9 @@ class Resource(six.with_metaclass(DeclarativeMetaclass)):
         try:
             auth_result = self._meta.authorization.read_detail(object_list, bundle)
             if auth_result is not True:
-                raise Unauthorized()
+                self.unauthorized_result(is_authenticated=bundle.request.user.is_authenticated)
         except Unauthorized as e:
-            self.unauthorized_result(e)
+            self.unauthorized_result(e, is_authenticated=bundle.request.user.is_authenticated)
 
         return auth_result
 
@@ -637,7 +640,7 @@ class Resource(six.with_metaclass(DeclarativeMetaclass)):
         try:
             auth_result = self._meta.authorization.create_list(object_list, bundle)
         except Unauthorized as e:
-            self.unauthorized_result(e)
+            self.unauthorized_result(e, is_authenticated=bundle.request.user.is_authenticated)
 
         return auth_result
 
@@ -649,9 +652,9 @@ class Resource(six.with_metaclass(DeclarativeMetaclass)):
         try:
             auth_result = self._meta.authorization.create_detail(object_list, bundle)
             if auth_result is not True:
-                raise Unauthorized()
+                self.unauthorized_result(is_authenticated=bundle.request.user.is_authenticated)
         except Unauthorized as e:
-            self.unauthorized_result(e)
+            self.unauthorized_result(e, is_authenticated=bundle.request.user.is_authenticated)
 
         return auth_result
 
@@ -663,7 +666,7 @@ class Resource(six.with_metaclass(DeclarativeMetaclass)):
         try:
             auth_result = self._meta.authorization.update_list(object_list, bundle)
         except Unauthorized as e:
-            self.unauthorized_result(e)
+            self.unauthorized_result(e, is_authenticated=bundle.request.user.is_authenticated)
 
         return auth_result
 
@@ -675,9 +678,9 @@ class Resource(six.with_metaclass(DeclarativeMetaclass)):
         try:
             auth_result = self._meta.authorization.update_detail(object_list, bundle)
             if auth_result is not True:
-                raise Unauthorized()
+                self.unauthorized_result(is_authenticated=bundle.request.user.is_authenticated)
         except Unauthorized as e:
-            self.unauthorized_result(e)
+            self.unauthorized_result(e, is_authenticated=bundle.request.user.is_authenticated)
 
         return auth_result
 
@@ -689,7 +692,7 @@ class Resource(six.with_metaclass(DeclarativeMetaclass)):
         try:
             auth_result = self._meta.authorization.delete_list(object_list, bundle)
         except Unauthorized as e:
-            self.unauthorized_result(e)
+            self.unauthorized_result(e, is_authenticated=bundle.request.user.is_authenticated)
 
         return auth_result
 
@@ -701,9 +704,9 @@ class Resource(six.with_metaclass(DeclarativeMetaclass)):
         try:
             auth_result = self._meta.authorization.delete_detail(object_list, bundle)
             if not auth_result:
-                raise Unauthorized()
+                self.unauthorized_result(is_authenticated=bundle.request.user.is_authenticated)
         except Unauthorized as e:
-            self.unauthorized_result(e)
+            self.unauthorized_result(e, is_authenticated=bundle.request.user.is_authenticated)
 
         return auth_result
 
