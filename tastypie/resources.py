@@ -255,7 +255,7 @@ class Resource(six.with_metaclass(DeclarativeMetaclass)):
                         json.loads(unicode(e.response.content), strict=False)
                     except:
                         log = logging.getLogger('django.request.tastypie')
-                        log.exception()
+                        log.exception('Bad tastypie response')
 
                     return e.response
 
