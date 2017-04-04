@@ -27,7 +27,9 @@ except (ImproperlyConfigured, ImportError):
     GeometryField = None
 from django.db.models.constants import LOOKUP_SEP
 from django.db.models.sql.constants import QUERY_TERMS
-from django.http import HttpResponse, HttpResponseNotFound, Http404
+from django.http import (
+    HttpResponse, HttpResponseNotFound, Http404, HttpResponseBadRequest
+)
 from django.utils import six
 from django.utils.cache import patch_cache_control, patch_vary_headers
 from django.utils.html import escape
@@ -251,11 +253,14 @@ class Resource(six.with_metaclass(DeclarativeMetaclass)):
                 # Prevent muting non-django's exceptions
                 # i.e. RequestException from 'requests' library
                 if hasattr(e, 'response') and isinstance(e.response, HttpResponse):
-                    try:
-                        json.loads(unicode(e.response.content), strict=False)
-                    except:
-                        log = logging.getLogger('django.request.tastypie')
-                        log.exception('Bad tastypie response')
+
+                    if isinstance(e.response, HttpResponseBadRequest):
+                        try:
+                            json.loads(unicode(e.response.content), strict=False)
+                        except:
+                            log = logging.getLogger('django.request.tastypie')
+                            log.exception('Non json bad request response')
+
                     return e.response
 
                 # A real, non-expected exception.
