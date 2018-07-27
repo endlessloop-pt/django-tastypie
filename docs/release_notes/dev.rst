@@ -7,4 +7,4 @@ copied to the release notes for the next release.
 Bugfixes
 --------
 
-* list of changes here
+* Example Bugfix (Closes #PR_Number)
