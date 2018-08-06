@@ -2223,7 +2223,7 @@ class BaseModelResource(Resource):
         Takes optional ``kwargs``, which are used to narrow the query to find
         the instance.
         """
-        field_names = self._meta.object_class._meta.get_all_field_names()
+        field_names = [f.name for f in self.model._meta.get_fields()]
         field_names.append('pk')
 
         kwargs = {k: v for k, v in kwargs.items() if k in field_names}
