@@ -2218,17 +2218,14 @@ class BaseModelResource(Resource):
         Takes optional ``kwargs``, which are used to narrow the query to find
         the instance.
         """
-        # Use ignore_bad_filters=True. `obj_get_list` filters based on
-        # request.GET, but `obj_get` usually filters based on `detail_uri_name`
-        # or data from a related field, so we don't want to raise errors if
-        # something doesn't explicitly match a configured filter.
-        applicable_filters = self.build_filters(filters=kwargs, ignore_bad_filters=True)
-        if self._meta.detail_uri_name in kwargs:
-            applicable_filters[self._meta.detail_uri_name] = kwargs[self._meta.detail_uri_name]
+        field_names = [f.name for f in self._meta.object_class._meta.get_fields()]
+        field_names.append('pk')
+
+        kwargs = {k: v for k, v in kwargs.items() if k in field_names}
 
         try:
-            object_list = self.apply_filters(bundle.request, applicable_filters)
-            stringified_kwargs = ', '.join(["%s=%s" % (k, v) for k, v in applicable_filters.items()])
+            object_list = self.apply_filters(bundle.request, **kwargs)
+            stringified_kwargs = ', '.join(["%s=%s" % (k, v) for k, v in kwargs.items()])
 
             if len(object_list) <= 0:
                 raise self._meta.object_class.DoesNotExist("Couldn't find an instance of '%s' which matched '%s'." % (self._meta.object_class.__name__, stringified_kwargs))
