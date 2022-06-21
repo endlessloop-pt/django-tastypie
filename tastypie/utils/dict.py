@@ -1,4 +1,5 @@
-from django.utils import six
+import six
+
 from django.utils.encoding import smart_bytes
 
 

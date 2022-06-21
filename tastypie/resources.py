@@ -34,7 +34,6 @@ from django.db.models.sql.constants import QUERY_TERMS
 from django.http import (
     HttpResponse, HttpResponseNotFound, Http404, HttpResponseBadRequest
 )
-from django.utils import six
 from django.utils.cache import patch_cache_control, patch_vary_headers
 from django.utils.html import escape
 from django.views.decorators.csrf import csrf_exempt

@@ -8,8 +8,7 @@ from __future__ import unicode_literals
 import re
 
 from unicodedata import category
-
-from django.utils import six
+import six
 
 # -----------------------------------------------------------------------------
 # javascript identifier unicode categories and "exceptional" chars

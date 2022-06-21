@@ -6,6 +6,8 @@ import decimal
 from decimal import Decimal
 import importlib
 
+import six
+
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db import models
 try:
@@ -14,7 +16,7 @@ try:
 except ImportError:
     from django.db.models.fields.related_descriptors import\
         ReverseOneToOneDescriptor
-from django.utils import datetime_safe, six
+from django.utils import datetime_safe
 
 from tastypie.bundle import Bundle
 from tastypie.exceptions import ApiFieldError, NotFound

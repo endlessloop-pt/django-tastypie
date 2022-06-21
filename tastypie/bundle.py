@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
+
+import six
+
 from django.http import HttpRequest
-from django.utils import six
 
 
 # In a separate file to avoid circular imports...
