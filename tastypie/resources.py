@@ -30,7 +30,6 @@ try:
 except ImportError:
     from django.db.models.fields.related_descriptors import\
         ReverseOneToOneDescriptor
-from django.db.models.sql.constants import QUERY_TERMS
 from django.http import (
     HttpResponse, HttpResponseNotFound, Http404, HttpResponseBadRequest
 )
@@ -62,6 +61,9 @@ from tastypie.utils.mime import determine_format, build_content_type
 from tastypie.validation import Validation
 from tastypie.compat import get_module_name, atomic_decorator
 
+QUERY_TERMS = {
+    'exact', 'iexact', 'contains', 'icontains', 'gt', 'gte', 'lt', 'lte', 'in', 'startswith', 'istartswith', 'endswith', 'iendswith', 'range', 'year','month', 'day', 'week_day', 'hour', 'minute', 'second', 'isnull', 'search','regex', 'iregex',
+}
 
 def sanitize(text):
     # We put the single quotes back, due to their frequent usage in exception
