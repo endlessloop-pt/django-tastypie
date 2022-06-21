@@ -10,7 +10,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate
 from django.core.exceptions import ImproperlyConfigured
 from django.middleware.csrf import _sanitize_token, constant_time_compare
-from django.utils.six.moves.urllib.parse import urlparse
+from six.moves.urllib.parse import urlparse
 from django.utils.translation import ugettext as _
 
 from tastypie.compat import (
