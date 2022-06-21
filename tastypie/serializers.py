@@ -6,7 +6,7 @@ import re
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.encoding import force_text, smart_bytes
+from django.utils.encoding import force_str, smart_bytes
 from django.core.serializers import json as djangojson
 
 from tastypie.bundle import Bundle
@@ -280,7 +280,7 @@ class Serializer(object):
             raise UnsupportedDeserializationFormat(format)
 
         if isinstance(content, six.binary_type):
-            content = force_text(content)
+            content = force_str(content)
 
         return method(content)
 
@@ -312,7 +312,7 @@ class Serializer(object):
             to_simple = self.to_simple
             return {key: to_simple(val, options) for key, val in six.iteritems(data)}
         if stype == _STR:
-            return force_text(data)
+            return force_str(data)
         if stype == _LIST:
             to_simple = self.to_simple
             return [to_simple(item, options) for item in data]
@@ -369,7 +369,7 @@ class Serializer(object):
                 if isinstance(simple_data, six.text_type):
                     element.text = simple_data
                 else:
-                    element.text = force_text(simple_data)
+                    element.text = force_str(simple_data)
 
         return element
 

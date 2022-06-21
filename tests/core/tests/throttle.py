@@ -3,7 +3,7 @@ import time
 
 from django.core.cache import cache
 from django.test import TestCase
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 
 from tastypie.models import ApiAccess
 from tastypie.throttle import BaseThrottle, CacheThrottle, CacheDBThrottle
@@ -154,4 +154,4 @@ class CacheDBThrottleTestCase(TestCase):
 class ModelTestCase(TestCase):
     def test_unicode(self):
         access = ApiAccess(identifier="testing", accessed=0)
-        self.assertEqual(force_text(access), 'testing @ 0')
+        self.assertEqual(force_str(access), 'testing @ 0')
