@@ -72,6 +72,9 @@ def sanitize(text):
     # messages.
     return escape(text).replace('&#39;', "'").replace('&quot;', '"')
 
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
 
 class ResourceOptions(object):
     """
@@ -246,7 +249,7 @@ class Resource(six.with_metaclass(DeclarativeMetaclass)):
                         # ``Cache-Control`` available then patch the header.
                         patch_cache_control(response, **self._meta.cache.cache_control())
 
-                if request.is_ajax() and not response.has_header("Cache-Control"):
+                if is_ajax(request) and not response.has_header("Cache-Control"):
                     # IE excessively caches XMLHttpRequests, so we're disabling
                     # the browser cache here.
                     # See http://www.enhanceie.com/ie/bugs.asp for details.
